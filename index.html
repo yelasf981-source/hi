@@ -8,42 +8,28 @@
 <link rel="manifest" id="manifestLink">
 
 <style>
-:root{
-  --bg:#020617;
-  --card:#0f172a;
-  --accent:#6366f1;
-  --safe:#22c55e;
-  --warn:#facc15;
-  --danger:#ef4444;
-  --muted:#94a3b8;
-}
-*{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui,Segoe UI,Roboto;
-  background:linear-gradient(135deg,#020617,#0f172a);
+  background:#020617;
   color:white;
 }
-.container{
-  max-width:900px;
-  margin:30px auto;
-  padding:20px;
-}
+.container{max-width:900px;margin:30px auto;padding:20px}
 .card{
-  background:var(--card);
+  background:#0f172a;
   border-radius:18px;
   padding:22px;
-  box-shadow:0 20px 40px rgba(0,0,0,.45);
+  box-shadow:0 20px 40px rgba(0,0,0,.5)
 }
 .hidden{display:none}
 button{
-  background:var(--accent);
+  background:#6366f1;
   color:white;
   border:none;
   padding:10px 16px;
   border-radius:12px;
   font-weight:600;
-  cursor:pointer;
+  cursor:pointer
 }
 button.secondary{background:#1f2937}
 input,textarea{
@@ -52,46 +38,47 @@ input,textarea{
   margin-top:10px;
   border-radius:12px;
   border:none;
-  outline:none;
+  outline:none
 }
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+.header{display:flex;justify-content:space-between;align-items:center}
 .nav button{margin-left:6px}
 .result{
   margin-top:15px;
   padding:14px;
   border-radius:12px;
   display:none;
-  font-weight:600;
+  font-weight:600
 }
-.safe{background:var(--safe)}
-.warn{background:var(--warn);color:#111}
-.danger{background:var(--danger)}
+.safe{background:#22c55e}
+.warn{background:#facc15;color:#111}
+.danger{background:#ef4444}
 .stats{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
   gap:12px;
-  margin-top:20px;
+  margin-top:20px
 }
 .stat{
   background:#1f2937;
   padding:16px;
   border-radius:14px;
-  text-align:center;
+  text-align:center
 }
 .certificate{
-  border:2px dashed var(--accent);
+  border:2px dashed #6366f1;
   padding:30px;
   text-align:center;
-  border-radius:18px;
+  border-radius:18px
 }
 </style>
 </head>
 
 <body>
+
+<!-- SOUND ALERT -->
+<audio id="dangerSound">
+  <source src="https://www.soundjay.com/buttons/sounds/beep-07.mp3">
+</audio>
 
 <!-- AUTH -->
 <div id="auth" class="container">
@@ -140,7 +127,7 @@ input,textarea{
         <h1>📜 Certificate</h1>
         <p>This certifies that</p>
         <h2 id="certName"></h2>
-        <p>completed the AI Cyber Safety Program</p>
+        <p>has completed the AI Cyber Safety Program</p>
         <p id="certDate"></p>
         <br>
         <button onclick="window.print()">Print / Save PDF</button>
@@ -150,15 +137,15 @@ input,textarea{
 </div>
 
 <script>
-/* AUTH SYSTEM */
+/* USERS */
 let isSignup=false;
 const users=JSON.parse(localStorage.getItem("users")||"{}");
 
+/* AUTH */
 function toggleMode(){
   isSignup=!isSignup;
   authTitle.textContent=isSignup?"📝 Sign Up":"🔐 Login";
 }
-
 function handleAuth(){
   const u=authUser.value.trim();
   const p=authPass.value.trim();
@@ -168,7 +155,7 @@ function handleAuth(){
     if(users[u]) return alert("User already exists");
     users[u]={pass:p};
     localStorage.setItem("users",JSON.stringify(users));
-    alert("Account created! Now login.");
+    alert("Account created! Login now.");
     toggleMode();
   }else{
     if(!users[u]||users[u].pass!==p) return alert("Invalid login");
@@ -176,20 +163,14 @@ function handleAuth(){
     startApp();
   }
 }
-
 function startApp(){
   auth.classList.add("hidden");
   app.classList.remove("hidden");
   certName.textContent=sessionStorage.user;
   certDate.textContent="Issued on "+new Date().toDateString();
 }
-
 if(sessionStorage.user) startApp();
-
-function logout(){
-  sessionStorage.clear();
-  location.reload();
-}
+function logout(){sessionStorage.clear();location.reload()}
 
 /* NAV */
 function showPage(p){
@@ -198,24 +179,44 @@ function showPage(p){
   document.getElementById(p).classList.remove("hidden");
 }
 
-/* AI LOGIC */
+/* AI ANALYSIS */
 let T=0,B=0,S=0,sum=0;
-const bad=["stupid","idiot","hate","loser","trash","kill","noob"];
+const badWords=[
+  // insults
+  "stupid","idiot","dumb","loser","noob","ugly","moron","fool","retard",
+
+  // harassment
+  "hate","trash","garbage","worthless","pathetic","useless",
+  "shut up","get lost","nobody likes you","weirdo",
+
+  // profanity (detection only)
+  "fuck","fuck you","fucking","shit","bullshit","bitch","asshole",
+  "bastard","motherfucker","mf","wtf","damn","crap",
+
+  // threats
+  "kill","die","go die","i will kill","i will hurt you",
+  "you should die","drop dead","watch your back"
+];
+
 function analyze(){
   const text=msg.value.toLowerCase();
-  let hits=0;
-  bad.forEach(w=>text.includes(w)&&hits++);
-  let score=Math.max(0,100-hits*25);
+  let hits=0,found=[];
+  badWords.forEach(w=>{
+    if(text.includes(w)){hits++;found.push(w)}
+  });
 
+  let score=Math.max(0,100-hits*20);
   let cls;
-  if(score>=75){cls="safe";S++}
-  else if(score>=40){cls="warn";B++}
-  else{cls="danger";B++}
+
+  if(score>=80){cls="safe";S++}
+  else if(score>=45){cls="warn";B++}
+  else{cls="danger";B++;dangerSound.play()}
 
   T++; sum+=score;
   result.className="result "+cls;
   result.style.display="block";
-  result.textContent="AI Confidence Score: "+score+"%";
+  result.innerHTML=`AI Confidence Score: <b>${score}%</b><br>`+
+    (found.length?`⚠️ Detected: ${found.join(", ")}`:"✅ No harmful language");
 
   t.textContent=T;
   b.textContent=B;
@@ -249,3 +250,4 @@ installBtn.onclick=()=>{
 
 </body>
 </html>
+
