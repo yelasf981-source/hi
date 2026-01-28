@@ -2,252 +2,781 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Cyber Safety</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#6366f1">
-<link rel="manifest" id="manifestLink">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Cyber Safety App - Upgrade Roadmap</title>
 <style>
-body{
-  margin:0;
-  font-family:system-ui,Segoe UI,Roboto;
-  background:#020617;
-  color:white;
-}
-.container{max-width:900px;margin:30px auto;padding:20px}
-.card{
-  background:#0f172a;
-  border-radius:18px;
-  padding:22px;
-  box-shadow:0 20px 40px rgba(0,0,0,.5)
-}
-.hidden{display:none}
-button{
-  background:#6366f1;
-  color:white;
-  border:none;
-  padding:10px 16px;
-  border-radius:12px;
-  font-weight:600;
-  cursor:pointer
-}
-button.secondary{background:#1f2937}
-input,textarea{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border-radius:12px;
-  border:none;
-  outline:none
-}
-.header{display:flex;justify-content:space-between;align-items:center}
-.nav button{margin-left:6px}
-.result{
-  margin-top:15px;
-  padding:14px;
-  border-radius:12px;
-  display:none;
-  font-weight:600
-}
-.safe{background:#22c55e}
-.warn{background:#facc15;color:#111}
-.danger{background:#ef4444}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:12px;
-  margin-top:20px
-}
-.stat{
-  background:#1f2937;
-  padding:16px;
-  border-radius:14px;
-  text-align:center
-}
-.certificate{
-  border:2px dashed #6366f1;
-  padding:30px;
-  text-align:center;
-  border-radius:18px
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #667eea;
+    margin-bottom: 10px;
+  }
+  
+  .subtitle {
+    color: #666;
+    font-size: 16px;
+  }
+  
+  .progress-overview {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 30px;
+    background: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .level {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+  
+  .level-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .level-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .level-icon {
+    font-size: 32px;
+  }
+  
+  .level-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .beginner { background: #4ade80; color: white; }
+  .intermediate { background: #fbbf24; color: white; }
+  .advanced { background: #f87171; color: white; }
+  
+  .upgrade-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 4px solid #667eea;
+  }
+  
+  .upgrade-item h4 {
+    color: #667eea;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  .upgrade-item.completed {
+    opacity: 0.6;
+    border-left-color: #4ade80;
+  }
+  
+  .upgrade-item.completed h4 {
+    text-decoration: line-through;
+    color: #4ade80;
+  }
+  
+  .code-snippet {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    overflow-x: auto;
+  }
+  
+  .why-section {
+    background: #eff6ff;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #1e40af;
+  }
+  
+  .resources {
+    margin-top: 10px;
+    padding-left: 20px;
+  }
+  
+  .resources li {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .resources a {
+    color: #667eea;
+    text-decoration: none;
+  }
+  
+  .resources a:hover {
+    text-decoration: underline;
+  }
+  
+  .toggle-icon {
+    font-size: 24px;
+    transition: transform 0.3s;
+  }
+  
+  .collapsed .toggle-icon {
+    transform: rotate(-90deg);
+  }
+  
+  .level-content {
+    max-height: 5000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .collapsed .level-content {
+    max-height: 0;
+  }
+  
+  .reset-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .reset-btn:hover {
+    background: #dc2626;
+  }
 </style>
 </head>
-
 <body>
 
-<!-- SOUND ALERT -->
-<audio id="dangerSound">
-  <source src="https://www.soundjay.com/buttons/sounds/beep-07.mp3">
-</audio>
-
-<!-- AUTH -->
-<div id="auth" class="container">
-  <div class="card">
-    <h1 id="authTitle">🔐 Login</h1>
-    <input id="authUser" placeholder="Username">
-    <input id="authPass" type="password" placeholder="Password">
-    <br><br>
-    <button onclick="handleAuth()">Continue</button>
-    <br><br>
-    <button class="secondary" onclick="toggleMode()">Switch to Sign Up</button>
+<div class="container">
+  <div class="header">
+    <h1>🚀 Level Up Your AI Cyber Safety App</h1>
+    <p class="subtitle">A practical roadmap to transform your app from good to production-ready</p>
   </div>
-</div>
+  
+  <div class="progress-overview">
+    <h3>Overall Progress</h3>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill">0%</div>
+    </div>
+    <p style="margin-top: 10px; color: #666;"><span id="completedCount">0</span> of <span id="totalCount">0</span> upgrades completed</p>
+    <button class="reset-btn" onclick="resetProgress()">Reset Progress</button>
+  </div>
+  
+  <!-- LEVEL 1: SECURITY & BEST PRACTICES -->
+  <div class="level">
+    <div class="level-header" onclick="toggleLevel(this)">
+      <div class="level-title">
+        <span class="level-icon">🔒</span>
+        <div>
+          <h2>Level 1: Security & Best Practices</h2>
+          <span class="level-badge beginner">Beginner</span>
+        </div>
+      </div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    
+    <div class="level-content">
+      <div class="upgrade-item" data-id="1">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Hash passwords instead of storing plain text</h4>
+        <p>Currently storing passwords as plain text is a major security risk.</p>
+        <div class="code-snippet">// Use bcrypt-like hashing
+const hashPassword = async (password) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0')).join('');
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> If someone inspects localStorage, they can see all passwords. Hashing protects user data even if storage is compromised.
+        </div>
+        <ul class="resources">
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto" target="_blank">Web Crypto API Docs</a></li>
+        </ul>
+      </div>
+      
+      <div class="upgrade-item" data-id="2">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add input validation and sanitization</h4>
+        <p>Prevent XSS attacks by sanitizing user input before displaying.</p>
+        <div class="code-snippet">function sanitizeInput(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
-<!-- APP -->
-<div id="app" class="container hidden">
-  <div class="card">
-    <div class="header">
-      <h1>🤖 AI Cyber Safety</h1>
-      <div class="nav">
-        <button class="secondary" onclick="showPage('analyzer')">Analyzer</button>
-        <button class="secondary" onclick="showPage('cert')">Certificate</button>
-        <button id="installBtn" hidden>Install</button>
-        <button onclick="logout()">Logout</button>
+// Use when displaying results
+result.innerHTML = sanitizeInput(userInput);</div>
+        <div class="why-section">
+          <strong>Why?</strong> Users could inject malicious scripts. Always sanitize before inserting into DOM.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="3">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add rate limiting to prevent spam</h4>
+        <p>Limit how many analyses a user can perform per minute.</p>
+        <div class="code-snippet">let analysisCount = 0;
+let lastReset = Date.now();
+
+function analyze() {
+  if (Date.now() - lastReset > 60000) {
+    analysisCount = 0;
+    lastReset = Date.now();
+  }
+  if (analysisCount >= 10) {
+    alert('Please wait before analyzing again');
+    return;
+  }
+  analysisCount++;
+  // ... rest of analysis
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> Prevents abuse and reduces load on your app.
+        </div>
       </div>
     </div>
+  </div>
+  
+  <!-- LEVEL 2: CODE QUALITY & ARCHITECTURE -->
+  <div class="level">
+    <div class="level-header" onclick="toggleLevel(this)">
+      <div class="level-title">
+        <span class="level-icon">🏗️</span>
+        <div>
+          <h2>Level 2: Code Quality & Architecture</h2>
+          <span class="level-badge intermediate">Intermediate</span>
+        </div>
+      </div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    
+    <div class="level-content">
+      <div class="upgrade-item" data-id="4">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Refactor to modular JavaScript (ES6 modules)</h4>
+        <p>Split your code into separate files for better organization.</p>
+        <div class="code-snippet">// auth.js
+export class AuthManager {
+  constructor() {
+    this.users = JSON.parse(localStorage.getItem("users") || "{}");
+  }
+  
+  login(username, password) { /* ... */ }
+  signup(username, password) { /* ... */ }
+}
 
-    <!-- ANALYZER -->
-    <div id="analyzer">
-      <textarea id="msg" rows="3" placeholder="Enter message..."></textarea>
-      <br><br>
-      <button onclick="analyze()">Analyze</button>
-      <div id="result" class="result"></div>
+// main.js
+import { AuthManager } from './auth.js';
+const auth = new AuthManager();</div>
+        <div class="why-section">
+          <strong>Why?</strong> Makes code maintainable, testable, and easier to debug. Essential for larger projects.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="5">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Implement proper error handling</h4>
+        <p>Add try-catch blocks and user-friendly error messages.</p>
+        <div class="code-snippet">async function handleAuth() {
+  try {
+    const u = authUser.value.trim();
+    const p = authPass.value.trim();
+    
+    if (!u || !p) {
+      throw new Error('Please fill in all fields');
+    }
+    
+    // ... auth logic
+  } catch (error) {
+    showError(error.message);
+    console.error('Auth error:', error);
+  }
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> Prevents crashes and provides better user experience when things go wrong.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="6">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add JSDoc comments for documentation</h4>
+        <p>Document your functions with proper comments.</p>
+        <div class="code-snippet">/**
+ * Analyzes text for harmful content
+ * @param {string} text - The text to analyze
+ * @returns {Object} Analysis result with score and detected words
+ */
+function analyze(text) {
+  // ...
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> Makes code self-documenting and helps IDEs provide better autocomplete.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="7">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Use const/let instead of implicit globals</h4>
+        <p>All your variables should be properly declared.</p>
+        <div class="code-snippet">// ❌ Bad (implicit global)
+users = JSON.parse(localStorage.getItem("users"));
 
-      <div class="stats">
-        <div class="stat"><h2 id="t">0</h2>Total</div>
-        <div class="stat"><h2 id="b">0</h2>Risky</div>
-        <div class="stat"><h2 id="s">0</h2>Safe</div>
-        <div class="stat"><h2 id="a">0%</h2>Avg</div>
+// ✅ Good (explicit declaration)
+const users = JSON.parse(localStorage.getItem("users") || "{}");</div>
+        <div class="why-section">
+          <strong>Why?</strong> Prevents variable conflicts and makes code more predictable.
+        </div>
       </div>
     </div>
+  </div>
+  
+  <!-- LEVEL 3: ENHANCED FUNCTIONALITY -->
+  <div class="level">
+    <div class="level-header" onclick="toggleLevel(this)">
+      <div class="level-title">
+        <span class="level-icon">⚡</span>
+        <div>
+          <h2>Level 3: Enhanced Functionality</h2>
+          <span class="level-badge intermediate">Intermediate</span>
+        </div>
+      </div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    
+    <div class="level-content">
+      <div class="upgrade-item" data-id="8">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Integrate actual AI/ML for text analysis</h4>
+        <p>Replace keyword matching with real sentiment analysis using an API.</p>
+        <div class="code-snippet">// Use Hugging Face Inference API (free tier available)
+async function analyzeWithAI(text) {
+  const response = await fetch(
+    "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ inputs: text })
+    }
+  );
+  return await response.json();
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> More accurate than keyword matching. Understands context and nuance.
+        </div>
+        <ul class="resources">
+          <li><a href="https://huggingface.co/inference-api" target="_blank">Hugging Face API</a></li>
+          <li><a href="https://platform.openai.com/docs/guides/moderation" target="_blank">OpenAI Moderation API</a></li>
+        </ul>
+      </div>
+      
+      <div class="upgrade-item" data-id="9">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add data export functionality (CSV/JSON)</h4>
+        <p>Let users download their analysis history.</p>
+        <div class="code-snippet">function exportData() {
+  const data = JSON.parse(localStorage.getItem('analysisHistory') || '[]');
+  const csv = 'Date,Text,Score\n' + 
+    data.map(d => `${d.date},"${d.text}",${d.score}`).join('\n');
+  
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'analysis-history.csv';
+  a.click();
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> Users can track their progress and analyze trends over time.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="10">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add history tracking with localStorage</h4>
+        <p>Store past analyses so users can review them.</p>
+        <div class="code-snippet">function saveAnalysis(text, score, detected) {
+  const history = JSON.parse(localStorage.getItem('history') || '[]');
+  history.unshift({
+    id: Date.now(),
+    text: text.substring(0, 50),
+    score,
+    detected,
+    date: new Date().toISOString()
+  });
+  localStorage.setItem('history', JSON.stringify(history.slice(0, 50)));
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> Provides value to users and helps them learn from past mistakes.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="11">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add dark/light theme toggle</h4>
+        <p>Let users customize the appearance.</p>
+        <div class="code-snippet">function toggleTheme() {
+  const isDark = document.body.classList.toggle('light-theme');
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
 
-    <!-- CERTIFICATE -->
-    <div id="cert" class="hidden">
-      <div class="certificate">
-        <h1>📜 Certificate</h1>
-        <p>This certifies that</p>
-        <h2 id="certName"></h2>
-        <p>has completed the AI Cyber Safety Program</p>
-        <p id="certDate"></p>
-        <br>
-        <button onclick="window.print()">Print / Save PDF</button>
+// CSS
+body.light-theme {
+  background: #f0f0f0;
+  color: #333;
+}
+body.light-theme .card {
+  background: white;
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> Improves accessibility and user comfort in different lighting conditions.
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- LEVEL 4: ADVANCED FEATURES -->
+  <div class="level">
+    <div class="level-header" onclick="toggleLevel(this)">
+      <div class="level-title">
+        <span class="level-icon">🎯</span>
+        <div>
+          <h2>Level 4: Advanced Features</h2>
+          <span class="level-badge advanced">Advanced</span>
+        </div>
+      </div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    
+    <div class="level-content">
+      <div class="upgrade-item" data-id="12">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add backend with Firebase or Supabase</h4>
+        <p>Move from localStorage to a real database for multi-device sync.</p>
+        <div class="code-snippet">// Firebase setup
+import { initializeApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);</div>
+        <div class="why-section">
+          <strong>Why?</strong> Real apps need persistent storage, user authentication, and data sync across devices.
+        </div>
+        <ul class="resources">
+          <li><a href="https://firebase.google.com/docs/web/setup" target="_blank">Firebase Docs</a></li>
+          <li><a href="https://supabase.com/docs" target="_blank">Supabase Docs</a></li>
+        </ul>
+      </div>
+      
+      <div class="upgrade-item" data-id="13">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add real-time collaboration features</h4>
+        <p>Let multiple users analyze text together in real-time.</p>
+        <div class="code-snippet">// Using WebSocket or Firebase Realtime Database
+const messagesRef = ref(database, 'room/' + roomId);
+onValue(messagesRef, (snapshot) => {
+  const data = snapshot.val();
+  updateUI(data);
+});</div>
+        <div class="why-section">
+          <strong>Why?</strong> Great for educational settings where teachers monitor student activity in real-time.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="14">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Implement proper PWA with offline functionality</h4>
+        <p>Make app work completely offline with cached data.</p>
+        <div class="code-snippet">// service-worker.js
+const CACHE_NAME = 'cyber-safety-v1';
+const urlsToCache = [
+  '/',
+  '/styles.css',
+  '/app.js',
+  '/offline.html'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
+});</div>
+        <div class="why-section">
+          <strong>Why?</strong> True PWAs work offline and provide app-like experience on mobile devices.
+        </div>
+        <ul class="resources">
+          <li><a href="https://web.dev/learn/pwa/" target="_blank">PWA Guide by Google</a></li>
+        </ul>
+      </div>
+      
+      <div class="upgrade-item" data-id="15">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add analytics dashboard with Chart.js</h4>
+        <p>Visualize analysis trends over time with interactive charts.</p>
+        <div class="code-snippet">import Chart from 'chart.js/auto';
+
+const ctx = document.getElementById('myChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: dates,
+    datasets: [{
+      label: 'Safety Score Over Time',
+      data: scores,
+      borderColor: '#6366f1'
+    }]
+  }
+});</div>
+        <div class="why-section">
+          <strong>Why?</strong> Visual data helps users understand patterns and progress better.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="16">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Build with a framework (React/Vue)</h4>
+        <p>Refactor entire app using modern framework for better state management.</p>
+        <div class="code-snippet">// React component example
+function Analyzer() {
+  const [text, setText] = useState('');
+  const [result, setResult] = useState(null);
+  
+  const analyze = async () => {
+    const score = await analyzeText(text);
+    setResult(score);
+  };
+  
+  return (
+    <div>
+      <textarea value={text} onChange={e => setText(e.target.value)} />
+      <button onClick={analyze}>Analyze</button>
+      {result && <Result data={result} />}
+    </div>
+  );
+}</div>
+        <div class="why-section">
+          <strong>Why?</strong> Frameworks make complex apps easier to manage and are industry standard.
+        </div>
+        <ul class="resources">
+          <li><a href="https://react.dev/learn" target="_blank">React Official Tutorial</a></li>
+          <li><a href="https://vuejs.org/tutorial/" target="_blank">Vue Tutorial</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <!-- LEVEL 5: PRODUCTION READY -->
+  <div class="level">
+    <div class="level-header" onclick="toggleLevel(this)">
+      <div class="level-title">
+        <span class="level-icon">🚢</span>
+        <div>
+          <h2>Level 5: Production Ready</h2>
+          <span class="level-badge advanced">Advanced</span>
+        </div>
+      </div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    
+    <div class="level-content">
+      <div class="upgrade-item" data-id="17">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add unit tests with Jest</h4>
+        <p>Test your functions to ensure they work correctly.</p>
+        <div class="code-snippet">// analyze.test.js
+import { analyze } from './analyze';
+
+test('detects harmful language', () => {
+  const result = analyze('you are stupid');
+  expect(result.score).toBeLessThan(100);
+  expect(result.detected).toContain('stupid');
+});</div>
+        <div class="why-section">
+          <strong>Why?</strong> Catches bugs before they reach users. Essential for professional development.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="18">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Set up CI/CD with GitHub Actions</h4>
+        <p>Automatically test and deploy your app on every commit.</p>
+        <div class="code-snippet"># .github/workflows/deploy.yml
+name: Deploy
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm test
+      - run: npm run build
+      - uses: peaceiris/actions-gh-pages@v3</div>
+        <div class="why-section">
+          <strong>Why?</strong> Professional workflow that ensures code quality and automated deployments.
+        </div>
+      </div>
+      
+      <div class="upgrade-item" data-id="19">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Add accessibility features (ARIA labels)</h4>
+        <p>Make your app usable for everyone, including screen reader users.</p>
+        <div class="code-snippet"><button 
+  aria-label="Analyze text for harmful content"
+  onclick="analyze()">
+  Analyze
+</button>
+
+<div role="alert" aria-live="polite" id="result"></div></div>
+        <div class="why-section">
+          <strong>Why?</strong> Makes your app inclusive and complies with accessibility standards (WCAG).
+        </div>
+        <ul class="resources">
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/" target="_blank">ARIA Authoring Practices</a></li>
+        </ul>
+      </div>
+      
+      <div class="upgrade-item" data-id="20">
+        <h4><input type="checkbox" class="checkbox" onchange="updateProgress()"> Deploy to production (Vercel/Netlify)</h4>
+        <p>Make your app live and accessible to the world.</p>
+        <div class="code-snippet"># Deploy with Vercel CLI
+npm i -g vercel
+vercel --prod
+
+# Or connect GitHub repo to Netlify for auto-deploy</div>
+        <div class="why-section">
+          <strong>Why?</strong> Your app is ready to share! Get real users and feedback.
+        </div>
+        <ul class="resources">
+          <li><a href="https://vercel.com/docs" target="_blank">Vercel Docs</a></li>
+          <li><a href="https://docs.netlify.com/" target="_blank">Netlify Docs</a></li>
+        </ul>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-/* USERS */
-let isSignup=false;
-const users=JSON.parse(localStorage.getItem("users")||"{}");
-
-/* AUTH */
-function toggleMode(){
-  isSignup=!isSignup;
-  authTitle.textContent=isSignup?"📝 Sign Up":"🔐 Login";
-}
-function handleAuth(){
-  const u=authUser.value.trim();
-  const p=authPass.value.trim();
-  if(!u||!p) return alert("Fill all fields");
-
-  if(isSignup){
-    if(users[u]) return alert("User already exists");
-    users[u]={pass:p};
-    localStorage.setItem("users",JSON.stringify(users));
-    alert("Account created! Login now.");
-    toggleMode();
-  }else{
-    if(!users[u]||users[u].pass!==p) return alert("Invalid login");
-    sessionStorage.user=u;
-    startApp();
-  }
-}
-function startApp(){
-  auth.classList.add("hidden");
-  app.classList.remove("hidden");
-  certName.textContent=sessionStorage.user;
-  certDate.textContent="Issued on "+new Date().toDateString();
-}
-if(sessionStorage.user) startApp();
-function logout(){sessionStorage.clear();location.reload()}
-
-/* NAV */
-function showPage(p){
-  analyzer.classList.add("hidden");
-  cert.classList.add("hidden");
-  document.getElementById(p).classList.remove("hidden");
-}
-
-/* AI ANALYSIS */
-let T=0,B=0,S=0,sum=0;
-const badWords=[
-  // insults
-  "stupid","idiot","dumb","loser","noob","ugly","moron","fool","retard",
-
-  // harassment
-  "hate","trash","garbage","worthless","pathetic","useless",
-  "shut up","get lost","nobody likes you","weirdo",
-
-  // profanity (detection only)
-  "fuck","fuck you","fucking","shit","bullshit","bitch","asshole",
-  "bastard","motherfucker","mf","wtf","damn","crap",
-
-  // threats
-  "kill","die","go die","i will kill","i will hurt you",
-  "you should die","drop dead","watch your back"
-];
-
-function analyze(){
-  const text=msg.value.toLowerCase();
-  let hits=0,found=[];
-  badWords.forEach(w=>{
-    if(text.includes(w)){hits++;found.push(w)}
-  });
-
-  let score=Math.max(0,100-hits*20);
-  let cls;
-
-  if(score>=80){cls="safe";S++}
-  else if(score>=45){cls="warn";B++}
-  else{cls="danger";B++;dangerSound.play()}
-
-  T++; sum+=score;
-  result.className="result "+cls;
-  result.style.display="block";
-  result.innerHTML=`AI Confidence Score: <b>${score}%</b><br>`+
-    (found.length?`⚠️ Detected: ${found.join(", ")}`:"✅ No harmful language");
-
-  t.textContent=T;
-  b.textContent=B;
-  s.textContent=S;
-  a.textContent=Math.round(sum/T)+"%";
-  msg.value="";
-}
-
-/* PWA */
-const manifest={name:"AI Cyber Safety",short_name:"CyberSafety",start_url:"./",display:"standalone",background_color:"#020617",theme_color:"#6366f1"};
-manifestLink.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:"application/json"}));
-
-if("serviceWorker"in navigator){
-  navigator.serviceWorker.register(
-    URL.createObjectURL(new Blob(["self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));"],{type:"text/javascript"}))
-  );
-}
-
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt",e=>{
-  e.preventDefault();
-  deferredPrompt=e;
-  installBtn.hidden=false;
-});
-installBtn.onclick=()=>{
-  deferredPrompt.prompt();
-  deferredPrompt=null;
-  installBtn.hidden=true;
-};
+  // Load progress from localStorage
+  const loadProgress = () => {
+    const saved = localStorage.getItem('cyberSafetyProgress');
+    if (saved) {
+      const completed = JSON.parse(saved);
+      completed.forEach(id => {
+        const item = document.querySelector(`[data-id="${id}"] .checkbox`);
+        if (item) {
+          item.checked = true;
+          item.closest('.upgrade-item').classList.add('completed');
+        }
+      });
+    }
+    updateProgress();
+    updateTotalCount();
+  };
+  
+  const updateTotalCount = () => {
+    const total = document.querySelectorAll('.checkbox').length;
+    document.getElementById('totalCount').textContent = total;
+  };
+  
+  const updateProgress = () => {
+    const checkboxes = document.querySelectorAll('.checkbox');
+    const completed = Array.from(checkboxes).filter(cb => cb.checked);
+    const percent = Math.round((completed.length / checkboxes.length) * 100);
+    
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressFill').textContent = percent + '%';
+    document.getElementById('completedCount').textContent = completed.length;
+    
+    // Save to localStorage
+    const completedIds = completed.map(cb => cb.closest('.upgrade-item').dataset.id);
+    localStorage.setItem('cyberSafetyProgress', JSON.stringify(completedIds));
+    
+    // Update completed styling
+    checkboxes.forEach(cb => {
+      const item = cb.closest('.upgrade-item');
+      if (cb.checked) {
+        item.classList.add('completed');
+      } else {
+        item.classList.remove('completed');
+      }
+    });
+  };
+  
+  const toggleLevel = (header) => {
+    header.parentElement.classList.toggle('collapsed');
+  };
+  
+  const resetProgress = () => {
+    if (confirm('Are you sure you want to reset all progress?')) {
+      localStorage.removeItem('cyberSafetyProgress');
+      document.querySelectorAll('.checkbox').forEach(cb => {
+        cb.checked = false;
+        cb.closest('.upgrade-item').classList.remove('completed');
+      });
+      updateProgress();
+    }
+  };
+  
+  // Initialize
+  loadProgress();
 </script>
 
 </body>
 </html>
-
