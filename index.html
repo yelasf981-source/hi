@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Cyber Safety</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#6366f1">
+<link rel="manifest" id="manifestLink">
+
+<style>
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --accent:#6366f1;
+  --safe:#22c55e;
+  --warn:#facc15;
+  --danger:#ef4444;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Roboto;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:white;
+}
+.container{
+  max-width:900px;
+  margin:30px auto;
+  padding:20px;
+}
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 20px 40px rgba(0,0,0,.45);
+}
+.hidden{display:none}
+button{
+  background:var(--accent);
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:12px;
+  font-weight:600;
+  cursor:pointer;
+}
+button.secondary{background:#1f2937}
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+}
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav button{margin-left:6px}
+.result{
+  margin-top:15px;
+  padding:14px;
+  border-radius:12px;
+  display:none;
+  font-weight:600;
+}
+.safe{background:var(--safe)}
+.warn{background:var(--warn);color:#111}
+.danger{background:var(--danger)}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;
+  margin-top:20px;
+}
+.stat{
+  background:#1f2937;
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+}
+.certificate{
+  border:2px dashed var(--accent);
+  padding:30px;
+  text-align:center;
+  border-radius:18px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUTH -->
+<div id="auth" class="container">
+  <div class="card">
+    <h1 id="authTitle">🔐 Login</h1>
+    <input id="authUser" placeholder="Username">
+    <input id="authPass" type="password" placeholder="Password">
+    <br><br>
+    <button onclick="handleAuth()">Continue</button>
+    <br><br>
+    <button class="secondary" onclick="toggleMode()">Switch to Sign Up</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="container hidden">
+  <div class="card">
+    <div class="header">
+      <h1>🤖 AI Cyber Safety</h1>
+      <div class="nav">
+        <button class="secondary" onclick="showPage('analyzer')">Analyzer</button>
+        <button class="secondary" onclick="showPage('cert')">Certificate</button>
+        <button id="installBtn" hidden>Install</button>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- ANALYZER -->
+    <div id="analyzer">
+      <textarea id="msg" rows="3" placeholder="Enter message..."></textarea>
+      <br><br>
+      <button onclick="analyze()">Analyze</button>
+      <div id="result" class="result"></div>
+
+      <div class="stats">
+        <div class="stat"><h2 id="t">0</h2>Total</div>
+        <div class="stat"><h2 id="b">0</h2>Risky</div>
+        <div class="stat"><h2 id="s">0</h2>Safe</div>
+        <div class="stat"><h2 id="a">0%</h2>Avg</div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE -->
+    <div id="cert" class="hidden">
+      <div class="certificate">
+        <h1>📜 Certificate</h1>
+        <p>This certifies that</p>
+        <h2 id="certName"></h2>
+        <p>completed the AI Cyber Safety Program</p>
+        <p id="certDate"></p>
+        <br>
+        <button onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* AUTH SYSTEM */
+let isSignup=false;
+const users=JSON.parse(localStorage.getItem("users")||"{}");
+
+function toggleMode(){
+  isSignup=!isSignup;
+  authTitle.textContent=isSignup?"📝 Sign Up":"🔐 Login";
+}
+
+function handleAuth(){
+  const u=authUser.value.trim();
+  const p=authPass.value.trim();
+  if(!u||!p) return alert("Fill all fields");
+
+  if(isSignup){
+    if(users[u]) return alert("User already exists");
+    users[u]={pass:p};
+    localStorage.setItem("users",JSON.stringify(users));
+    alert("Account created! Now login.");
+    toggleMode();
+  }else{
+    if(!users[u]||users[u].pass!==p) return alert("Invalid login");
+    sessionStorage.user=u;
+    startApp();
+  }
+}
+
+function startApp(){
+  auth.classList.add("hidden");
+  app.classList.remove("hidden");
+  certName.textContent=sessionStorage.user;
+  certDate.textContent="Issued on "+new Date().toDateString();
+}
+
+if(sessionStorage.user) startApp();
+
+function logout(){
+  sessionStorage.clear();
+  location.reload();
+}
+
+/* NAV */
+function showPage(p){
+  analyzer.classList.add("hidden");
+  cert.classList.add("hidden");
+  document.getElementById(p).classList.remove("hidden");
+}
+
+/* AI LOGIC */
+let T=0,B=0,S=0,sum=0;
+const bad=["stupid","idiot","hate","loser","trash","kill","noob"];
+function analyze(){
+  const text=msg.value.toLowerCase();
+  let hits=0;
+  bad.forEach(w=>text.includes(w)&&hits++);
+  let score=Math.max(0,100-hits*25);
+
+  let cls;
+  if(score>=75){cls="safe";S++}
+  else if(score>=40){cls="warn";B++}
+  else{cls="danger";B++}
+
+  T++; sum+=score;
+  result.className="result "+cls;
+  result.style.display="block";
+  result.textContent="AI Confidence Score: "+score+"%";
+
+  t.textContent=T;
+  b.textContent=B;
+  s.textContent=S;
+  a.textContent=Math.round(sum/T)+"%";
+  msg.value="";
+}
+
+/* PWA */
+const manifest={name:"AI Cyber Safety",short_name:"CyberSafety",start_url:"./",display:"standalone",background_color:"#020617",theme_color:"#6366f1"};
+manifestLink.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:"application/json"}));
+
+if("serviceWorker"in navigator){
+  navigator.serviceWorker.register(
+    URL.createObjectURL(new Blob(["self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));"],{type:"text/javascript"}))
+  );
+}
+
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  installBtn.hidden=false;
+});
+installBtn.onclick=()=>{
+  deferredPrompt.prompt();
+  deferredPrompt=null;
+  installBtn.hidden=true;
+};
+</script>
+
+</body>
+</html>
